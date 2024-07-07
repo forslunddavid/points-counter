@@ -1,6 +1,6 @@
 //first you choose the number of teams. Then the amount of points to win Each team is handed a color Red, Blue, Green, Purple, Orange or Yellow. Max six teams. When you have chosen the number of teams you get directed to a new page where each team takes up equal space of the screen. when you touch the screen the points are added to the team. when you reach the set amount of points to win a pop up modal says what team has won and gives you the option to play again (game resets to 0 points with the same amount of points to win and same amount of teams. or New game, back to starting screen to choose amount of points and teams
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import "./App.css"
 
 const Game = () => {
@@ -10,7 +10,10 @@ const Game = () => {
 	const [gameStarted, setGameStarted] = useState(false)
 	const [winner, setWinner] = useState(null)
 
-	const colors = ["Red", "Blue", "Green", "Purple", "Orange", "Yellow"]
+	const colors = useMemo(
+		() => ["Red", "Blue", "Green", "Purple", "Orange", "Yellow"],
+		[]
+	)
 
 	useEffect(() => {
 		if (numTeams > 0 && numTeams <= 6) {
@@ -20,7 +23,7 @@ const Game = () => {
 			}))
 			setTeams(newTeams)
 		}
-	}, [numTeams])
+	}, [colors, numTeams])
 
 	const handleStartGame = () => {
 		setGameStarted(true)
@@ -50,6 +53,16 @@ const Game = () => {
 		setTeams([])
 		setGameStarted(false)
 		setWinner(null)
+	}
+
+	const getGridTemplate = (numTeams) => {
+		if (numTeams <= 4) {
+			const columns = Math.ceil(Math.sqrt(numTeams))
+			const rows = Math.ceil(numTeams / columns)
+			return `repeat(${rows}, 1fr) / repeat(${columns}, 1fr)`
+		} else {
+			return `repeat(3, 1fr) / repeat(2, 1fr)`
+		}
 	}
 
 	if (!gameStarted) {
@@ -92,18 +105,16 @@ const Game = () => {
 	}
 
 	return (
-		<div style={{ display: "flex", height: "100vh" }}>
+		<div
+			className="team-container"
+			style={{ gridTemplate: getGridTemplate(numTeams) }}
+		>
 			{teams.map((team, index) => (
 				<div
+					className="team"
 					key={index}
 					style={{
-						flex: 1,
 						backgroundColor: team.color,
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						fontSize: "2em",
-						cursor: "pointer",
 					}}
 					onClick={() => handleTeamClick(index)}
 				>
