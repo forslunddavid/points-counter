@@ -1,15 +1,25 @@
-//first you choose the number of teams. Then the amount of points to win Each team is handed a color Red, Blue, Green, Purple, Orange or Yellow. Max six teams. When you have chosen the number of teams you get directed to a new page where each team takes up equal space of the screen. when you touch the screen the points are added to the team. when you reach the set amount of points to win a pop up modal says what team has won and gives you the option to play again (game resets to 0 points with the same amount of points to win and same amount of teams. or New game, back to starting screen to choose amount of points and teams
-
 import { useState, useEffect, useMemo } from "react"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
 
 const Game = () => {
-	const [numTeams, setNumTeams] = useState(2)
-	const [pointsToWin, setPointsToWin] = useState(10)
-	const [teams, setTeams] = useState([])
-	const [gameStarted, setGameStarted] = useState(false)
+	const [numTeams, setNumTeams] = useState(() => {
+		const saved = localStorage.getItem("numTeams")
+		return saved ? JSON.parse(saved) : 2
+	})
+	const [pointsToWin, setPointsToWin] = useState(() => {
+		const saved = localStorage.getItem("pointsToWin")
+		return saved ? JSON.parse(saved) : 10
+	})
+	const [teams, setTeams] = useState(() => {
+		const saved = localStorage.getItem("teams")
+		return saved ? JSON.parse(saved) : []
+	})
+	const [gameStarted, setGameStarted] = useState(() => {
+		const saved = localStorage.getItem("gameStarted")
+		return saved ? JSON.parse(saved) : false
+	})
 	const [winner, setWinner] = useState(null)
 
 	const colors = useMemo(
@@ -17,7 +27,7 @@ const Game = () => {
 		[]
 	)
 
-	useEffect(() => {
+	const initializeTeams = (numTeams) => {
 		if (numTeams > 0 && numTeams <= 6) {
 			const newTeams = Array.from({ length: numTeams }, (_, index) => ({
 				color: colors[index],
@@ -25,10 +35,47 @@ const Game = () => {
 			}))
 			setTeams(newTeams)
 		}
-	}, [colors, numTeams])
+	}
+
+	useEffect(() => {
+		if (!teams.length) {
+			initializeTeams(numTeams)
+		}
+	}, [colors, numTeams, teams.length])
+
+	useEffect(() => {
+		window.addEventListener("beforeunload", handleBeforeUnload)
+		return () => {
+			window.removeEventListener("beforeunload", handleBeforeUnload)
+		}
+	}, [])
+
+	useEffect(() => {
+		localStorage.setItem("numTeams", JSON.stringify(numTeams))
+	}, [numTeams])
+
+	useEffect(() => {
+		localStorage.setItem("pointsToWin", JSON.stringify(pointsToWin))
+	}, [pointsToWin])
+
+	useEffect(() => {
+		localStorage.setItem("teams", JSON.stringify(teams))
+	}, [teams])
+
+	useEffect(() => {
+		localStorage.setItem("gameStarted", JSON.stringify(gameStarted))
+	}, [gameStarted])
+
+	const handleBeforeUnload = (e) => {
+		if (gameStarted) {
+			e.preventDefault()
+			e.returnValue = ""
+		}
+	}
 
 	const handleStartGame = () => {
 		setGameStarted(true)
+		initializeTeams(numTeams) // Ensure teams are initialized when starting a game
 	}
 
 	const handleTeamClick = (index) => {
@@ -45,16 +92,21 @@ const Game = () => {
 	}
 
 	const resetGame = () => {
-		setTeams(teams.map((team) => ({ ...team, points: 0 })))
+		const resetTeams = teams.map((team) => ({ ...team, points: 0 }))
+		setTeams(resetTeams)
 		setWinner(null)
 	}
 
 	const startNewGame = () => {
 		setNumTeams(2)
 		setPointsToWin(10)
-		setTeams([])
+		initializeTeams(2) // Ensure teams are initialized when starting a new game
 		setGameStarted(false)
 		setWinner(null)
+		localStorage.removeItem("numTeams")
+		localStorage.removeItem("pointsToWin")
+		localStorage.removeItem("teams")
+		localStorage.removeItem("gameStarted")
 	}
 
 	const getGridTemplate = (numTeams) => {
@@ -124,15 +176,26 @@ const Game = () => {
 					</div>
 				))}
 				{winner && (
-					<div className="winner-modal">
-						<h2>{winner.color} team wins!</h2>
-						<button className="modal-button" onClick={resetGame}>
-							Play Again
-						</button>
-						<button className="modal-button" onClick={startNewGame}>
-							New Game
-						</button>
-					</div>
+					<>
+						<div className="overlay"></div>
+						<div className="winner-modal">
+							<h2 className="winning-team">
+								{winner.color} team wins!
+							</h2>
+							<button
+								className="modal-button"
+								onClick={resetGame}
+							>
+								Play Again
+							</button>
+							<button
+								className="modal-button"
+								onClick={startNewGame}
+							>
+								New Game
+							</button>
+						</div>
+					</>
 				)}
 			</div>
 		</>

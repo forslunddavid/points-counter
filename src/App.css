@@ -77,10 +77,16 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: white;
+	background-color: #090909;
 	padding: 20px;
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	z-index: 1001;
+}
+
+.winning-team {
+	color: #efefef;
+	margin-top: 0;
 }
 
 .winner-modal .modal-button:first-of-type {
@@ -93,4 +99,18 @@
 
 .modal-button {
 	padding: 0.6em 1.2em;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 1000;
+}
+
+.disabled {
+	pointer-events: none;
 }
