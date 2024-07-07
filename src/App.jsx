@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
+import ConfettiComponent from "./assets/components/Confetti"
 
 const Game = () => {
 	const [numTeams, setNumTeams] = useState(() => {
@@ -44,13 +45,6 @@ const Game = () => {
 	}, [colors, numTeams, teams.length])
 
 	useEffect(() => {
-		window.addEventListener("beforeunload", handleBeforeUnload)
-		return () => {
-			window.removeEventListener("beforeunload", handleBeforeUnload)
-		}
-	}, [])
-
-	useEffect(() => {
 		localStorage.setItem("numTeams", JSON.stringify(numTeams))
 	}, [numTeams])
 
@@ -65,13 +59,6 @@ const Game = () => {
 	useEffect(() => {
 		localStorage.setItem("gameStarted", JSON.stringify(gameStarted))
 	}, [gameStarted])
-
-	const handleBeforeUnload = (e) => {
-		if (gameStarted) {
-			e.preventDefault()
-			e.returnValue = ""
-		}
-	}
 
 	const handleStartGame = () => {
 		setGameStarted(true)
@@ -177,6 +164,7 @@ const Game = () => {
 				))}
 				{winner && (
 					<>
+						<ConfettiComponent />
 						<div className="overlay"></div>
 						<div className="winner-modal">
 							<h2 className="winning-team">
