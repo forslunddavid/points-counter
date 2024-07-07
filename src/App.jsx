@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useMemo } from "react"
 import "./App.css"
+import { RxCross2 } from "react-icons/rx"
+import CustomNumberInput from "./assets/components/CustomNumberInput"
 
 const Game = () => {
 	const [numTeams, setNumTeams] = useState(2)
@@ -68,67 +70,72 @@ const Game = () => {
 	if (!gameStarted) {
 		return (
 			<div className="setup-container">
-				<h1>Game Setup</h1>
+				<h1 className="setup-title">Points Counter</h1>
+				<h2>Game Setup</h2>
 				<div className="setup-inputs">
-					<label>Number of Teams (2-6): </label>
-					<input
-						type="number"
-						min="2"
-						max="6"
+					<label className="setup-label">
+						Number of Teams (2-6):{" "}
+					</label>
+
+					<CustomNumberInput
+						min={2}
+						max={6}
 						value={numTeams}
-						onChange={(e) =>
-							setNumTeams(
-								Math.min(
-									6,
-									Math.max(2, parseInt(e.target.value))
-								)
-							)
+						onChange={(value) =>
+							setNumTeams(Math.min(6, Math.max(2, value)))
 						}
 					/>
 				</div>
 				<div className="setup-inputs">
-					<label>Points to Win: </label>
-					<input
-						type="number"
-						min="1"
+					<label className="setup-label">Points to Win: </label>
+					<CustomNumberInput
+						min={1}
 						value={pointsToWin}
-						onChange={(e) =>
-							setPointsToWin(
-								Math.max(1, parseInt(e.target.value))
-							)
-						}
+						onChange={(value) => setPointsToWin(Math.max(1, value))}
 					/>
 				</div>
-				<button onClick={handleStartGame}>Start Game</button>
+				<button className="start-game-button" onClick={handleStartGame}>
+					Start Game
+				</button>
 			</div>
 		)
 	}
 
 	return (
-		<div
-			className="team-container"
-			style={{ gridTemplate: getGridTemplate(numTeams) }}
-		>
-			{teams.map((team, index) => (
-				<div
-					className="team"
-					key={index}
-					style={{
-						backgroundColor: team.color,
-					}}
-					onClick={() => handleTeamClick(index)}
-				>
-					{team.points}
-				</div>
-			))}
-			{winner && (
-				<div className="winner-modal">
-					<h2>{winner.color} team wins!</h2>
-					<button onClick={resetGame}>Play Again</button>
-					<button onClick={startNewGame}>New Game</button>
-				</div>
-			)}
-		</div>
+		<>
+			<header className="header">
+				<RxCross2 className="header-icon" onClick={startNewGame} />
+				<p className="header-title">Points to win: {pointsToWin}</p>
+			</header>
+			<div
+				className="team-container"
+				style={{ gridTemplate: getGridTemplate(numTeams) }}
+			>
+				{teams.map((team, index) => (
+					<div
+						className="team"
+						key={index}
+						style={{
+							backgroundColor: team.color,
+						}}
+						onClick={() => handleTeamClick(index)}
+					>
+						{team.points}
+					</div>
+				))}
+				{winner && (
+					<div className="winner-modal">
+						<h2>{winner.color} team wins!</h2>
+						<button className="modal-button" onClick={resetGame}>
+							Play Again
+						</button>
+						<button className="modal-button" onClick={startNewGame}>
+							New Game
+						</button>
+					</div>
+				)}
+			</div>
+		</>
 	)
 }
 
