@@ -1,13 +1,16 @@
 //first you choose the number of teams. Then the amount of points to win Each team is handed a color Red, Blue, Green, Purple, Orange or Yellow. Max six teams. When you have chosen the number of teams you get directed to a new page where each team takes up equal space of the screen. when you touch the screen the points are added to the team. when you reach the set amount of points to win a pop up modal says what team has won and gives you the option to play again (game resets to 0 points with the same amount of points to win and same amount of teams. or New game, back to starting screen to choose amount of points and teams
 
 //TODO
-// click effects
+// click effects for points
+// add darkmode/lightmode icons if someone want to chang outside of browser preferences
+// language changer en/sv
 
 import { useState, useEffect, useMemo } from "react"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
 import ConfettiComponent from "./assets/components/Confetti"
+import { RotatingLines } from "react-loader-spinner"
 
 const Game = () => {
 	const [numTeams, setNumTeams] = useState(() => {
@@ -27,7 +30,7 @@ const Game = () => {
 		return saved ? JSON.parse(saved) : false
 	})
 	const [winner, setWinner] = useState(null)
-
+	const [loading] = useState(false)
 	const colors = useMemo(
 		() => ["Red", "Blue", "Green", "Purple", "Orange", "Yellow"],
 		[]
@@ -111,85 +114,108 @@ const Game = () => {
 		}
 	}
 
-	if (!gameStarted) {
-		return (
-			<div className="setup-container">
-				<h1 className="setup-title">Points Counter</h1>
-				<h2>Game Setup</h2>
-				<div className="setup-inputs">
-					<label className="setup-label">
-						Number of Teams (2-6):{" "}
-					</label>
-
-					<CustomNumberInput
-						min={2}
-						max={6}
-						value={numTeams}
-						onChange={(value) =>
-							setNumTeams(Math.min(6, Math.max(2, value)))
-						}
-					/>
-				</div>
-				<div className="setup-inputs">
-					<label className="setup-label">Points to Win: </label>
-					<CustomNumberInput
-						min={1}
-						value={pointsToWin}
-						onChange={(value) => setPointsToWin(Math.max(1, value))}
-					/>
-				</div>
-				<button className="start-game-button" onClick={handleStartGame}>
-					Start Game
-				</button>
-			</div>
-		)
-	}
-
 	return (
 		<>
-			<header className="header">
-				<RxCross2 className="header-icon" onClick={startNewGame} />
-				<p className="header-title">Points to win: {pointsToWin}</p>
-			</header>
-			<div
-				className="team-container"
-				style={{ gridTemplate: getGridTemplate(numTeams) }}
-			>
-				{teams.map((team, index) => (
-					<div
-						className="team"
-						key={index}
-						style={{
-							backgroundColor: team.color,
-						}}
-						onClick={() => handleTeamClick(index)}
-					>
-						{team.points}
+			{loading && (
+				<div className="loader-container">
+					<RotatingLines
+						visible={true}
+						height="96"
+						width="96"
+						strokeColor="#646cff"
+						strokeWidth="5"
+						animationDuration="0.75"
+						ariaLabel="rotating-lines-loading"
+					/>
+				</div>
+			)}
+			{!loading && !gameStarted && (
+				<div className="setup-container">
+					<h1 className="setup-title">Points Counter</h1>
+					<h2>Game Setup</h2>
+					<div className="setup-inputs">
+						<label className="setup-label">
+							Number of Teams (2-6):{" "}
+						</label>
+						<CustomNumberInput
+							min={2}
+							max={6}
+							value={numTeams}
+							onChange={(value) =>
+								setNumTeams(Math.min(6, Math.max(2, value)))
+							}
+						/>
 					</div>
-				))}
-				{winner && (
-					<>
-						<ConfettiComponent />
-						<div className="winner-modal">
-							<h2 className="winning-team">
-								{winner.color} team wins!
-							</h2>
-							<button
-								className="modal-button"
-								onClick={resetGame}
+					<div className="setup-inputs">
+						<label className="setup-label">Points to Win: </label>
+						<CustomNumberInput
+							min={1}
+							value={pointsToWin}
+							onChange={(value) =>
+								setPointsToWin(Math.max(1, value))
+							}
+						/>
+					</div>
+					<button
+						className="start-game-button"
+						onClick={handleStartGame}
+					>
+						Start Game
+					</button>
+				</div>
+			)}
+			{!loading && gameStarted && (
+				<>
+					<header className="header">
+						<RxCross2
+							className="header-icon"
+							onClick={startNewGame}
+						/>
+						<p className="header-title">
+							Points to win: {pointsToWin}
+						</p>
+					</header>
+					<div
+						className="team-container"
+						style={{ gridTemplate: getGridTemplate(numTeams) }}
+					>
+						{teams.map((team, index) => (
+							<div
+								className="team"
+								key={index}
+								style={{
+									backgroundColor: team.color,
+								}}
+								onClick={() => handleTeamClick(index)}
 							>
-								Play Again
-							</button>
-							<button
-								className="modal-button"
-								onClick={startNewGame}
-							>
-								New Game
-							</button>
-						</div>
-					</>
-				)}
-			</div>
+								{team.points}
+							</div>
+						))}
+						{winner && (
+							<>
+								<ConfettiComponent />
+								<div className="winner-modal">
+									<h2 className="winning-team">
+										{winner.color} team wins!
+									</h2>
+									<button
+										className="modal-button"
+										onClick={resetGame}
+									>
+										Play Again
+									</button>
+									<button
+										className="modal-button"
+										onClick={startNewGame}
+									>
+										New Game
+									</button>
+								</div>
+							</>
+						)}
+					</div>
+				</>
+			)}
 		</>
 	)
 }
