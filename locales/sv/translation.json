@@ -1,0 +1,19 @@
+{
+	"heading": "Poängräknare",
+	"game_setup": "Spelinställningar",
+	"no_teams": "Antal lag (2-6):",
+	"win_points": "Antal poäng:",
+	"start_game": "Starta spelet",
+	"game_header": "Antal poäng:",
+	"winner": "vinner!",
+	"rematch": "Spela igen",
+	"new_game": "Nytt spel",
+	"colors": {
+		"Red": "Röd",
+		"Blue": "Blå",
+		"Green": "Grön",
+		"Purple": "Lila",
+		"Orange": "Orange",
+		"Yellow": "Gul"
+	}
+}
