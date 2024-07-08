@@ -79,14 +79,16 @@
 
 .team {
 	width: 50vw;
-	height: calc(100svh - 5em);
-	height: calc(100vh - 5em);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 2em;
 	cursor: pointer;
 	color: #090909;
+}
+
+.team:active {
+	transform: scale(0.95);
 }
 
 .winner-modal {
