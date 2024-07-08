@@ -49,9 +49,7 @@ button {
 	cursor: pointer;
 	transition: border-color 0.25s;
 }
-button:hover {
-	border-color: #efefef;
-}
+
 button:focus,
 button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
@@ -62,7 +60,7 @@ button:active {
 }
 
 input {
-	background-color: #efefef;
+	background-color: #c2c2c2;
 	color: #090909;
 	height: 30px;
 	width: 280px;
@@ -72,9 +70,40 @@ input {
 	border: 0;
 }
 
-@media (prefers-color-scheme: light) {
+.dark-mode {
+	color: #efefef;
+	background-color: #090909;
 	* {
-		color: #213547;
+		color: #efefef;
+		background-color: #090909;
+	}
+	a:hover {
+		color: #747bff;
+	}
+	button {
+		background-color: #646cff;
+		color: #efefef;
+	}
+
+	button:hover {
+		border-color: #efefef;
+	}
+
+	.winner-modal {
+		box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	}
+
+	input {
+		background-color: #efefef;
+		color: #090909;
+	}
+}
+
+.light-mode {
+	color: #090909;
+	background-color: #ffffff;
+	* {
+		color: #090909;
 		background-color: #ffffff;
 	}
 	a:hover {
@@ -85,7 +114,16 @@ input {
 		color: #efefef;
 	}
 
+	button:hover {
+		border-color: #090909;
+	}
+
 	.winner-modal {
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	}
+
+	input {
+		background-color: #090909;
+		color: #efefef;
 	}
 }

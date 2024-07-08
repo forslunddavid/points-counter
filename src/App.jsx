@@ -2,13 +2,13 @@
 
 //TODO
 // click effects for points
-// add darkmode/lightmode icons if someone want to chang outside of browser preferences
 // language changer en/sv
 //if i click in to the input it zooms, make it auto zoom out again when i click outside the input or the start game button.
 
 import { useState, useEffect, useMemo } from "react"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
+import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
 import ConfettiComponent from "./assets/components/Confetti"
 import { RotatingLines } from "react-loader-spinner"
@@ -32,6 +32,13 @@ const Game = () => {
 	})
 	const [winner, setWinner] = useState(null)
 	const [loading] = useState(false)
+	const [isDarkMode, setIsDarkMode] = useState(() => {
+		const saved = localStorage.getItem("isDarkMode")
+		return saved
+			? JSON.parse(saved)
+			: window.matchMedia &&
+					window.matchMedia("(prefers-color-scheme: dark)").matches
+	})
 	const colors = useMemo(
 		() => ["Red", "Blue", "Green", "Purple", "Orange", "Yellow"],
 		[]
@@ -69,6 +76,17 @@ const Game = () => {
 		localStorage.setItem("gameStarted", JSON.stringify(gameStarted))
 	}, [gameStarted])
 
+	useEffect(() => {
+		localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode))
+		if (isDarkMode) {
+			document.body.classList.add("dark-mode")
+			document.body.classList.remove("light-mode")
+		} else {
+			document.body.classList.add("light-mode")
+			document.body.classList.remove("dark-mode")
+		}
+	}, [isDarkMode])
+
 	const handleStartGame = () => {
 		setGameStarted(true)
 		initializeTeams(numTeams)
@@ -105,6 +123,10 @@ const Game = () => {
 		localStorage.removeItem("gameStarted")
 	}
 
+	const toggleDarkMode = () => {
+		setIsDarkMode((prevMode) => !prevMode)
+	}
+
 	const getGridTemplate = (numTeams) => {
 		if (numTeams <= 4) {
 			const columns = Math.ceil(Math.sqrt(numTeams))
@@ -132,6 +154,17 @@ const Game = () => {
 			)}
 			{!loading && !gameStarted && (
 				<div className="setup-container">
+					<div className="settings-container">
+						<div className="language-container">en/sv</div>
+						<div className="toggle-container">
+							{isDarkMode ? (
+								<MdOutlineLightMode onClick={toggleDarkMode} />
+							) : (
+								<MdOutlineDarkMode onClick={toggleDarkMode} />
+							)}
+						</div>
+					</div>
+
 					<h1 className="setup-title">Points Counter</h1>
 					<h2>Game Setup</h2>
 					<div className="setup-inputs">
