@@ -56,13 +56,17 @@
 	grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
 	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 	width: 100vw;
+	height: calc(100svh - 5em);
 	height: calc(100vh - 5em);
 	place-content: center;
 	cursor: pointer;
+	overflow: hidden;
 }
 
 .team {
 	width: 50vw;
+	height: calc(100svh - 5em);
+	height: calc(100vh - 5em);
 	display: flex;
 	align-items: center;
 	justify-content: center;
