@@ -3,7 +3,6 @@
 //TODO
 // click effects for points
 // language changer en/sv
-//if i click in to the input it zooms, make it auto zoom out again when i click outside the input or the start game button.
 
 import { useState, useEffect, useMemo } from "react"
 import "./App.css"

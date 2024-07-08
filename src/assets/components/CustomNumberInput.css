@@ -12,6 +12,10 @@
 	outline: 4px auto webkit-focus-ring-color;
 }
 
+input[type="number"] {
+	font-size: 16px; /* Minimum size to prevent zoom on iOS */
+}
+
 .custom-number-wrapper input {
 	text-align: center;
 	width: 50px;
