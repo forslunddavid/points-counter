@@ -4,6 +4,7 @@
 // language changer en/sv
 
 import { useState, useEffect, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
@@ -11,7 +12,14 @@ import CustomNumberInput from "./assets/components/CustomNumberInput"
 import ConfettiComponent from "./assets/components/Confetti"
 import { RotatingLines } from "react-loader-spinner"
 
+const lngs = {
+	en: { nativName: "English" },
+	sv: { nativName: "Svenska" },
+}
+
 const Game = () => {
+	const { t, i18n } = useTranslation()
+
 	const [numTeams, setNumTeams] = useState(() => {
 		const saved = localStorage.getItem("numTeams")
 		return saved ? JSON.parse(saved) : 2
@@ -37,17 +45,40 @@ const Game = () => {
 			: window.matchMedia &&
 					window.matchMedia("(prefers-color-scheme: dark)").matches
 	})
-	const colors = useMemo(
-		() => ["Red", "Blue", "Green", "Purple", "Orange", "Yellow"],
+	const colorMap = useMemo(
+		() => ({
+			Red: "red",
+			Blue: "blue",
+			Green: "green",
+			Purple: "purple",
+			Orange: "orange",
+			Yellow: "yellow",
+		}),
 		[]
+	)
+
+	const translatedColors = useMemo(
+		() => ({
+			Red: t("colors.Red"),
+			Blue: t("colors.Blue"),
+			Green: t("colors.Green"),
+			Purple: t("colors.Purple"),
+			Orange: t("colors.Orange"),
+			Yellow: t("colors.Yellow"),
+		}),
+		[i18n.resolvedLanguage]
 	)
 
 	const initializeTeams = (numTeams) => {
 		if (numTeams > 0 && numTeams <= 6) {
-			const newTeams = Array.from({ length: numTeams }, (_, index) => ({
-				color: colors[index],
-				points: 0,
-			}))
+			const newTeams = Array.from({ length: numTeams }, (_, index) => {
+				const colorKey = Object.keys(colorMap)[index]
+				return {
+					colorName: translatedColors[colorKey],
+					colorCode: colorMap[colorKey],
+					points: 0,
+				}
+			})
 			setTeams(newTeams)
 		}
 	}
@@ -56,7 +87,7 @@ const Game = () => {
 		if (!teams.length) {
 			initializeTeams(numTeams)
 		}
-	}, [colors, numTeams, teams.length])
+	}, [colorMap, numTeams, teams.length])
 
 	useEffect(() => {
 		localStorage.setItem("numTeams", JSON.stringify(numTeams))
@@ -153,7 +184,20 @@ const Game = () => {
 			{!loading && !gameStarted && (
 				<div className="setup-container">
 					<div className="settings-container">
-						<div className="language-container">en/sv</div>
+						<div className="language-container">
+							<select
+								onChange={(e) =>
+									i18n.changeLanguage(e.target.value)
+								}
+								value={i18n.resolvedLanguage}
+							>
+								{Object.keys(lngs).map((lng) => (
+									<option key={lng} value={lng}>
+										{lngs[lng].nativName}
+									</option>
+								))}
+							</select>
+						</div>
 						<div className="toggle-container">
 							{isDarkMode ? (
 								<MdOutlineLightMode onClick={toggleDarkMode} />
@@ -163,12 +207,10 @@ const Game = () => {
 						</div>
 					</div>
 
-					<h1 className="setup-title">Points Counter</h1>
-					<h2>Game Setup</h2>
+					<h1 className="setup-title">{t("heading")}</h1>
+					<h2>{t("game_setup")}</h2>
 					<div className="setup-inputs">
-						<label className="setup-label">
-							Number of Teams (2-6):{" "}
-						</label>
+						<label className="setup-label">{t("no_teams")} </label>
 						<CustomNumberInput
 							min={2}
 							max={6}
@@ -179,7 +221,9 @@ const Game = () => {
 						/>
 					</div>
 					<div className="setup-inputs">
-						<label className="setup-label">Points to Win: </label>
+						<label className="setup-label">
+							{t("win_points")}{" "}
+						</label>
 						<CustomNumberInput
 							min={1}
 							value={pointsToWin}
@@ -192,7 +236,7 @@ const Game = () => {
 						className="start-game-button"
 						onClick={handleStartGame}
 					>
-						Start Game
+						{t("start_game")}
 					</button>
 				</div>
 			)}
@@ -204,7 +248,7 @@ const Game = () => {
 							onClick={startNewGame}
 						/>
 						<p className="header-title">
-							Points to win: {pointsToWin}
+							{t("game_header")} {pointsToWin}
 						</p>
 					</header>
 					<div
@@ -216,31 +260,33 @@ const Game = () => {
 								className="team"
 								key={index}
 								style={{
-									backgroundColor: team.color,
+									backgroundColor: team.colorCode,
 								}}
 								onClick={() => handleTeamClick(index)}
 							>
 								{team.points}
+								{/* <span>{team.colorName}</span> */}
 							</div>
 						))}
+
 						{winner && (
 							<>
 								<ConfettiComponent className="confetti" />
 								<div className="winner-modal">
 									<h2 className="winning-team">
-										{winner.color} team wins!
+										{winner.colorName} {t("winner")}
 									</h2>
 									<button
 										className="modal-button"
 										onClick={resetGame}
 									>
-										Play Again
+										{t("rematch")}
 									</button>
 									<button
 										className="modal-button"
 										onClick={startNewGame}
 									>
-										New Game
+										{t("new_game")}
 									</button>
 								</div>
 							</>

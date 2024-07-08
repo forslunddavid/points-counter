@@ -1,0 +1,19 @@
+{
+	"heading": "Points Counter",
+	"game_setup": "Game setup",
+	"no_teams": "Number of teams (2-6):",
+	"win_points": "Points to win:",
+	"start_game": "Start game",
+	"game_header": "Points to win:",
+	"winner": "team wins!",
+	"rematch": "Play again",
+	"new_game": "New game",
+	"colors": {
+		"Red": "Red",
+		"Blue": "Blue",
+		"Green": "Green",
+		"Purple": "Purple",
+		"Orange": "Orange",
+		"Yellow": "Yellow"
+	}
+}

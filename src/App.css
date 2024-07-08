@@ -28,11 +28,13 @@
 	width: 100%;
 }
 
-.language-container {
-	visibility: hidden;
+.toggle-container {
+	place-content: center;
 }
 
-.toggle-container {
+.toggle-container svg {
+	height: 32px;
+	width: 32px;
 }
 
 .setup-container {
