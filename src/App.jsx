@@ -265,7 +265,6 @@ const Game = () => {
 								onClick={() => handleTeamClick(index)}
 							>
 								{team.points}
-								{/* <span>{team.colorName}</span> */}
 							</div>
 						))}
 
