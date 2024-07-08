@@ -3,11 +3,6 @@
 	line-height: 1.5;
 	font-weight: 400;
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
 }
 
 html,
@@ -23,27 +18,18 @@ body {
 a {
 	font-weight: 500;
 	color: #efefef;
-	text-decoration: inherit;
 }
 a:hover {
 	color: #efefef;
 }
 
 body {
-	margin: 0;
-	padding: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	max-height: 100dvh;
 	max-height: 100svh;
 	max-height: 100vh;
-	background-color: #090909;
-}
-
-h1 {
-	font-size: 3.2em;
-	line-height: 1.1;
 }
 
 button {
@@ -66,6 +52,10 @@ button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:active {
+	transform: scale(0.95);
+}
+
 input {
 	background-color: #efefef;
 	color: #090909;
@@ -75,12 +65,10 @@ input {
 	padding: 0;
 	margin: 0;
 	border: 0;
-	/* padding: 5px; */
-	/* margin: 5px; */
 }
 
-/* @media (prefers-color-scheme: light) {
-	:root {
+@media (prefers-color-scheme: light) {
+	* {
 		color: #213547;
 		background-color: #ffffff;
 	}
@@ -88,6 +76,11 @@ input {
 		color: #747bff;
 	}
 	button {
-		background-color: #f9f9f9;
+		background-color: #646cff;
+		color: #efefef;
 	}
-} */
+
+	.winner-modal {
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	}
+}

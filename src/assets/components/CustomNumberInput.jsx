@@ -20,11 +20,12 @@ const CustomNumberInput = ({ value, onChange, min, max }) => {
 	}
 
 	return (
-		<div className="custom-number-input">
+		<div className="custom-number-wrapper">
 			<button className="decrement" onClick={decrement}>
 				-
 			</button>
 			<input
+				className="customer-number-input"
 				type="number"
 				value={value}
 				onChange={handleChange}

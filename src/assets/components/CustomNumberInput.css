@@ -1,16 +1,25 @@
-.custom-number-input {
+.custom-number-wrapper {
 	display: flex;
 	align-items: center;
 }
 
-.custom-number-input input {
+.custom-number-input:hover {
+	border: 1px solid #efefef;
+}
+
+.custom-number-input:focus,
+.custom-number-input:focus-visible {
+	outline: 4px auto webkit-focus-ring-color;
+}
+
+.custom-number-wrapper input {
 	text-align: center;
 	width: 50px;
 	height: 50px;
 	margin: 0 0.8em 0 0.8em;
 }
 
-.custom-number-input button {
+.custom-number-wrapper button {
 	width: 50px;
 	height: 50px;
 	background-color: #646cff;
@@ -23,6 +32,32 @@
 	justify-content: center;
 }
 
-.custom-number-input button:disabled {
+.custom-number-wrapper button:disabled {
 	cursor: not-allowed;
+}
+
+.increment:hover {
+	border: 1px solid #efefef;
+}
+
+.increment:focus,
+.increment:focus-visible {
+	outline: 4px auto -webkit-focus-ring-color;
+}
+
+.decrement:hover {
+	border: 1px solid #efefef;
+}
+
+.decrement:focus,
+.decrement:focus-visible {
+	outline: 4px auto -webkit-focus-ring-color;
+}
+
+.increment:active {
+	transform: scale(0.95);
+}
+
+.decrement:active {
+	transform: scale(0.95);
 }
