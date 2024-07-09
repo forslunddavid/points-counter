@@ -3,6 +3,10 @@
 	align-items: center;
 }
 
+.custom-number-input {
+	border-radius: 0 !important;
+}
+
 .custom-number-input:hover {
 	border: 1px solid #efefef;
 }
@@ -20,7 +24,6 @@ input[type="number"] {
 	text-align: center;
 	width: 50px;
 	height: 50px;
-	margin: 0 0.8em 0 0.8em;
 }
 
 .custom-number-wrapper button {
@@ -38,6 +41,14 @@ input[type="number"] {
 
 .custom-number-wrapper button:disabled {
 	cursor: not-allowed;
+}
+
+.increment {
+	border-radius: 0 8px 8px 0;
+}
+
+.decrement {
+	border-radius: 8px 0 0 8px;
 }
 
 .increment:hover {

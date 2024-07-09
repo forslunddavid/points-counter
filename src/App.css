@@ -65,6 +65,7 @@
 .start-game-button {
 	margin-top: 0.8em;
 	padding: 0.6em 1.2em;
+	border-radius: 8px;
 }
 
 .team-container {
@@ -119,6 +120,7 @@
 
 .modal-button {
 	padding: 0.6em 1.2em;
+	border-radius: 8px;
 }
 
 .disabled {
