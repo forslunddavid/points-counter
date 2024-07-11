@@ -5,6 +5,7 @@
 
 .custom-number-input {
 	border-radius: 0 !important;
+	/* width: 40em; */
 }
 
 .custom-number-input:hover {
@@ -22,7 +23,7 @@ input[type="number"] {
 
 .custom-number-wrapper input {
 	text-align: center;
-	width: 50px;
+	width: 70px;
 	height: 50px;
 }
 
