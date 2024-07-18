@@ -5,6 +5,8 @@ import { useState, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
+import { GrEdit } from "react-icons/gr"
+
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
 import ConfettiComponent from "./assets/components/Confetti"
@@ -262,7 +264,12 @@ const Game = () => {
 								}}
 								onClick={() => handleTeamClick(index)}
 							>
-								{team.points}
+								<div className="edit-button">
+									<GrEdit />
+								</div>
+								<p className="points-container">
+									{team.points}
+								</p>
 							</div>
 						))}
 
