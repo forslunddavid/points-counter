@@ -116,6 +116,7 @@
 	color: white;
 	border: none;
 	border-radius: 0px !important;
+	font-size: 0.75em !important;
 }
 
 .custom-input .decrement,
