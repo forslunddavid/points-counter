@@ -145,6 +145,7 @@ const Game = () => {
 		initializeTeams(2)
 		setGameStarted(false)
 		setWinner(null)
+		setEditMode(false)
 		localStorage.removeItem("numTeams")
 		localStorage.removeItem("pointsToWin")
 		localStorage.removeItem("teams")
