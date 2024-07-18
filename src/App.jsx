@@ -1,12 +1,8 @@
-//first you choose the number of teams. Then the amount of points to win Each team is handed a color Red, Blue, Green, Purple, Orange or Yellow. Max six teams. When you have chosen the number of teams you get directed to a new page where each team takes up equal space of the screen. when you touch the screen the points are added to the team. when you reach the set amount of points to win a pop up modal says what team has won and gives you the option to play again (game resets to 0 points with the same amount of points to win and same amount of teams. or New game, back to starting screen to choose amount of points and teams
-
-//TODO
 import { useState, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
-import { GrEdit } from "react-icons/gr"
-
+import { GrEdit, GrCheckmark } from "react-icons/gr"
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import CustomNumberInput from "./assets/components/CustomNumberInput"
 import ConfettiComponent from "./assets/components/Confetti"
@@ -45,6 +41,9 @@ const Game = () => {
 			: window.matchMedia &&
 					window.matchMedia("(prefers-color-scheme: dark)").matches
 	})
+
+	const [editMode, setEditMode] = useState(false)
+
 	const colorMap = useMemo(
 		() => ({
 			Red: "red",
@@ -122,7 +121,7 @@ const Game = () => {
 	}
 
 	const handleTeamClick = (index) => {
-		if (!gameStarted || winner) return
+		if (!gameStarted || winner || editMode) return
 
 		const updatedTeams = [...teams]
 		updatedTeams[index].points += 1
@@ -164,6 +163,16 @@ const Game = () => {
 		} else {
 			return `repeat(3, 1fr) / repeat(2, 1fr)`
 		}
+	}
+
+	const toggleEditMode = () => {
+		setEditMode((prevEditMode) => !prevEditMode)
+	}
+
+	const handlePointsChange = (index, value) => {
+		const updatedTeams = [...teams]
+		updatedTeams[index].points = value
+		setTeams(updatedTeams)
 	}
 
 	return (
@@ -210,7 +219,7 @@ const Game = () => {
 					<h1 className="setup-title">{t("heading")}</h1>
 					<h2>{t("game_setup")}</h2>
 					<div className="setup-inputs">
-						<label className="setup-label">{t("no_teams")} </label>
+						<label className="setup-label">{t("no_teams")}</label>
 						<CustomNumberInput
 							min={2}
 							max={6}
@@ -221,9 +230,7 @@ const Game = () => {
 						/>
 					</div>
 					<div className="setup-inputs">
-						<label className="setup-label">
-							{t("win_points")}{" "}
-						</label>
+						<label className="setup-label">{t("win_points")}</label>
 						<CustomNumberInput
 							min={1}
 							value={pointsToWin}
@@ -243,13 +250,15 @@ const Game = () => {
 			{!loading && gameStarted && (
 				<>
 					<header className="header">
-						<RxCross2
-							className="header-icon"
-							onClick={startNewGame}
-						/>
+						<div className="header-icon">
+							<RxCross2 onClick={startNewGame} />
+						</div>
 						<p className="header-title">
 							{t("game_header")} {pointsToWin}
 						</p>
+						<div className="edit-header" onClick={toggleEditMode}>
+							{editMode ? <GrCheckmark /> : <GrEdit />}
+						</div>
 					</header>
 					<div
 						className="team-container"
@@ -264,12 +273,21 @@ const Game = () => {
 								}}
 								onClick={() => handleTeamClick(index)}
 							>
-								<div className="edit-button">
-									<GrEdit />
-								</div>
-								<p className="points-container">
-									{team.points}
-								</p>
+								{editMode ? (
+									<div className="custom-input">
+										<CustomNumberInput
+											min={0}
+											value={team.points}
+											onChange={(value) =>
+												handlePointsChange(index, value)
+											}
+										/>
+									</div>
+								) : (
+									<p className="points-container">
+										{team.points}
+									</p>
+								)}
 							</div>
 						))}
 
