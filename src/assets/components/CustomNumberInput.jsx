@@ -1,7 +1,6 @@
-import React from "react"
 import "./CustomNumberInput.css"
 
-const CustomNumberInput = ({ value, onChange, min, max, className }) => {
+const CustomNumberInput = ({ value, onChange, min, max, className, id }) => {
 	const increment = () => {
 		const newValue = max ? Math.min(value + 1, max) : value + 1
 		onChange(newValue)
@@ -25,6 +24,7 @@ const CustomNumberInput = ({ value, onChange, min, max, className }) => {
 				-
 			</button>
 			<input
+				id={`${id}`}
 				className={`custom-number-input ${className}`}
 				type="number"
 				value={value}

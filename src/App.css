@@ -90,12 +90,15 @@
 .team {
 	position: relative;
 	width: 50vw;
+	height: 1fr;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 2em;
 	cursor: pointer;
 	color: #090909 !important;
+	min-width: 160px;
+	min-height: 1/3vh;
 }
 
 .team:active {
@@ -162,10 +165,11 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
 	z-index: 1000;
+	background-color: rgba(255, 255, 255, 0.8);
 }

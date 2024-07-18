@@ -1,12 +1,25 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, lazy, Suspense, useId } from "react"
 import { useTranslation } from "react-i18next"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import { GrEdit, GrCheckmark } from "react-icons/gr"
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
-import CustomNumberInput from "./assets/components/CustomNumberInput"
-import ConfettiComponent from "./assets/components/Confetti"
 import { RotatingLines } from "react-loader-spinner"
+
+const CustomNumberInput = lazy(() =>
+	import("./assets/components/CustomNumberInput")
+)
+const ConfettiComponent = lazy(() => import("./assets/components/Confetti"))
+
+let cls = 0
+new PerformanceObserver((entryList) => {
+	for (const entry of entryList.getEntries()) {
+		if (!entry.hadRecentInput) {
+			cls += entry.value
+			console.log("Current CLS value:", cls, entry)
+		}
+	}
+}).observe({ type: "layout-shift", buffered: true })
 
 const lngs = {
 	en: { nativName: "English" },
@@ -15,6 +28,8 @@ const lngs = {
 
 const Game = () => {
 	const { t, i18n } = useTranslation()
+	const numTeamsId = useId()
+	const pointsToWinId = useId()
 
 	const [numTeams, setNumTeams] = useState(() => {
 		const saved = localStorage.getItem("numTeams")
@@ -65,7 +80,7 @@ const Game = () => {
 			Orange: t("colors.Orange"),
 			Yellow: t("colors.Yellow"),
 		}),
-		[i18n.resolvedLanguage]
+		[i18n.resolvedLanguage, t]
 	)
 
 	const initializeTeams = (numTeams) => {
@@ -196,6 +211,7 @@ const Game = () => {
 					<div className="settings-container">
 						<div className="language-container">
 							<select
+								aria-label="language-select"
 								onChange={(e) =>
 									i18n.changeLanguage(e.target.value)
 								}
@@ -220,25 +236,35 @@ const Game = () => {
 					<h1 className="setup-title">{t("heading")}</h1>
 					<h2>{t("game_setup")}</h2>
 					<div className="setup-inputs">
-						<label className="setup-label">{t("no_teams")}</label>
-						<CustomNumberInput
-							min={2}
-							max={6}
-							value={numTeams}
-							onChange={(value) =>
-								setNumTeams(Math.min(6, Math.max(2, value)))
-							}
-						/>
+						<label htmlFor={numTeamsId} className="setup-label">
+							{t("no_teams")}
+						</label>
+						<Suspense fallback={<div>Loading...</div>}>
+							<CustomNumberInput
+								id={numTeamsId}
+								min={2}
+								max={6}
+								value={numTeams}
+								onChange={(value) =>
+									setNumTeams(Math.min(6, Math.max(2, value)))
+								}
+							/>
+						</Suspense>
 					</div>
 					<div className="setup-inputs">
-						<label className="setup-label">{t("win_points")}</label>
-						<CustomNumberInput
-							min={1}
-							value={pointsToWin}
-							onChange={(value) =>
-								setPointsToWin(Math.max(1, value))
-							}
-						/>
+						<label htmlFor={pointsToWinId} className="setup-label">
+							{t("win_points")}
+						</label>
+						<Suspense fallback={<div>Loading...</div>}>
+							<CustomNumberInput
+								id={pointsToWinId}
+								min={1}
+								value={pointsToWin}
+								onChange={(value) =>
+									setPointsToWin(Math.max(1, value))
+								}
+							/>
+						</Suspense>
 					</div>
 					<button
 						className="start-game-button"
@@ -252,13 +278,21 @@ const Game = () => {
 				<>
 					<header className="header">
 						<div className="header-icon">
-							<RxCross2 onClick={startNewGame} />
+							<RxCross2
+								onClick={startNewGame}
+								width="24"
+								height="24"
+							/>
 						</div>
 						<p className="header-title">
 							{t("game_header")} {pointsToWin}
 						</p>
 						<div className="edit-header" onClick={toggleEditMode}>
-							{editMode ? <GrCheckmark /> : <GrEdit />}
+							{editMode ? (
+								<GrCheckmark width="24" height="24" />
+							) : (
+								<GrEdit width="24" height="24" />
+							)}
 						</div>
 					</header>
 					<div
@@ -276,13 +310,21 @@ const Game = () => {
 							>
 								{editMode ? (
 									<div className="custom-input">
-										<CustomNumberInput
-											min={0}
-											value={team.points}
-											onChange={(value) =>
-												handlePointsChange(index, value)
-											}
-										/>
+										<Suspense
+											fallback={<div>Loading...</div>}
+										>
+											<CustomNumberInput
+												id={`team-points-${index}`}
+												min={0}
+												value={team.points}
+												onChange={(value) =>
+													handlePointsChange(
+														index,
+														value
+													)
+												}
+											/>
+										</Suspense>
 									</div>
 								) : (
 									<p className="points-container">
@@ -294,7 +336,9 @@ const Game = () => {
 
 						{winner && (
 							<>
-								<ConfettiComponent className="confetti" />
+								<Suspense fallback={<div>Loading...</div>}>
+									<ConfettiComponent className="confetti" />
+								</Suspense>
 								<div className="winner-modal">
 									<h2 className="winning-team">
 										{winner.colorName} {t("winner")}
