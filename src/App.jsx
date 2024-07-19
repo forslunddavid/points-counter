@@ -12,15 +12,15 @@ const CustomNumberInput = lazy(() =>
 )
 const ConfettiComponent = lazy(() => import("./assets/components/Confetti"))
 
-let cls = 0
-new PerformanceObserver((entryList) => {
-	for (const entry of entryList.getEntries()) {
-		if (!entry.hadRecentInput) {
-			cls += entry.value
-			console.log("Current CLS value:", cls, entry)
-		}
-	}
-}).observe({ type: "layout-shift", buffered: true })
+// let cls = 0
+// new PerformanceObserver((entryList) => {
+// 	for (const entry of entryList.getEntries()) {
+// 		if (!entry.hadRecentInput) {
+// 			cls += entry.value
+// 			console.log("Current CLS value:", cls, entry)
+// 		}
+// 	}
+// }).observe({ type: "layout-shift", buffered: true })
 
 const lngs = {
 	en: { nativName: "English" },
@@ -346,18 +346,20 @@ const Game = () => {
 									<h2 className="winning-team">
 										{winner.colorName} {t("winner")}
 									</h2>
-									<button
-										className="modal-button"
-										onClick={resetGame}
-									>
-										{t("rematch")}
-									</button>
-									<button
-										className="modal-button"
-										onClick={startNewGame}
-									>
-										{t("new_game")}
-									</button>
+									<div className="winner-modal-button-container">
+										<button
+											className="modal-button"
+											onClick={resetGame}
+										>
+											{t("rematch")}
+										</button>
+										<button
+											className="modal-button"
+											onClick={startNewGame}
+										>
+											{t("new_game")}
+										</button>
+									</div>
 								</div>
 							</>
 						)}

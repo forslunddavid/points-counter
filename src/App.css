@@ -73,6 +73,8 @@
 	margin-top: 0.8em;
 	padding: 0.6em 1.2em;
 	border-radius: 8px;
+	height: 4em;
+	width: 10em;
 }
 
 .team-container {
@@ -84,7 +86,8 @@
 	height: calc(100vh - 5em);
 	place-content: center;
 	cursor: pointer;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 
 .team {
@@ -130,6 +133,8 @@
 
 .winner-modal {
 	min-width: 260px;
+	max-width: fit-content;
+	height: fit-content;
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -142,6 +147,12 @@
 
 .winning-team {
 	margin-top: 0;
+}
+
+.winner-modal-button-container {
+	display: flex;
+	justify-content: center;
+	height: 3em;
 }
 
 .winner-modal .modal-button:first-of-type {
