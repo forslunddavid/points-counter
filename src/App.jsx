@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo, lazy, Suspense, useId } from "react"
+import { useState, useEffect, useMemo, lazy, Suspense } from "react"
 import { useTranslation } from "react-i18next"
+import { v4 as uuidv4 } from "uuid"
 import "./App.css"
 import { RxCross2 } from "react-icons/rx"
 import { GrEdit, GrCheckmark } from "react-icons/gr"
@@ -28,8 +29,6 @@ const lngs = {
 
 const Game = () => {
 	const { t, i18n } = useTranslation()
-	const numTeamsId = useId()
-	const pointsToWinId = useId()
 
 	const [numTeams, setNumTeams] = useState(() => {
 		const saved = localStorage.getItem("numTeams")
@@ -191,6 +190,9 @@ const Game = () => {
 		setTeams(updatedTeams)
 	}
 
+	const numTeamsId = uuidv4()
+	const pointsToWinId = uuidv4()
+
 	return (
 		<>
 			{loading && (
@@ -211,6 +213,7 @@ const Game = () => {
 					<div className="settings-container">
 						<div className="language-container">
 							<select
+								id="language-select"
 								aria-label="language-select"
 								onChange={(e) =>
 									i18n.changeLanguage(e.target.value)
